@@ -56,7 +56,6 @@ def update_conversation(store_message,n_clicks, client, enter,chat_history):
     l'historique de la conversation
     """
 
-
     if ctx.args_grouping[1]["triggered"]==True and client or  ctx.args_grouping[3]["triggered"]==True and client:
         store_message=json.loads(store_message)
         input_message = store_message["message"]
