@@ -1,4 +1,3 @@
-
 import os
 import time
 import json
@@ -7,6 +6,7 @@ import json
 from dash import Dash, html, Input, Output, ctx, callback, State, dcc, MATCH, ALL, Patch
 import dash_bootstrap_components as dbc
 from dash.exceptions import PreventUpdate
+
 
 
 def Header(name, app):
@@ -82,23 +82,22 @@ app.layout = dbc.Container(
         dcc.Store(id="store-message", data=""),
         conversation,
         controls,
-        dbc.InputGroup(
-            [
-                dbc.Select(id="select", #si on veut selectionner plusieurs : mettre un dbc.Dropdown avec multi=True
-                    options=[
-                        {"label": " ", "value": 0},
-                        {"label": "Date", "value": 1},
-                        {"label": "Sondage", "value": 2},
-                        {"label": "Nombre", "value": 3},
-                        {"label": "Siège", "value": 4},
-                        {"label": "Créneau", "value": 5},
-                        {"label": "Genre", "value": 6},
-                        {"label": "Type Friandise", "value": 7},
-                        {"label": "Taille Friandise", "value": 8}
-                    ]
-                ),
-                dbc.InputGroupText("Choisir"),
-            ]),html.Div(
+        dcc.Dropdown(
+                    [{'label': 'Noyau', 'value': '', 'disabled': True},
+                        {'label': 'Message', 'value': 'message'},
+                        {'label': 'Date', 'value': 'date'},
+                        {'label': 'Sondage', 'value': 'sondage'},
+                        {'label': 'Nombre', 'value': 'nombre'},
+                        {'label': 'Film', 'value': '', 'disabled': True},
+                        {'label': 'Siège', 'value': 'siege'},
+                        {'label': 'Créneau', 'value': 'creneau'},
+                        {'label': 'Genre', 'value': 'genre'},
+                        {'label': 'Friandise', 'value': '', 'disabled': True},
+                        {'label': 'Type Friandise', 'value': 'type_friandise'},
+                        {'label': 'Taille Friandise', 'value': 'taille_friandise'}
+                    ], placeholder="Selectionner option(s)",multi=True,id="select", value="message"
+                )
+           ,html.Div(
                         [
                             dcc.Input(id="new-item-input"),
                             html.Button("Ajouter la réponse", id="add-btn"),

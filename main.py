@@ -108,29 +108,32 @@ def keep_message(n_clicks, client,selected_option ,survey_answers,enter,user_inp
     :return:
     le message en json
     """
-
     if  ctx.args_grouping[0]["triggered"]==True and client or ctx.args_grouping[4]["triggered"]==True and client:
         message = {}
         if user_input:
             message["message"] = user_input
-        if selected_option != None or selected_option !="0":
-            if selected_option == "1":
-                message["isDate"]=True
-            elif selected_option == "2" and survey_answers:
-                survey_answers=json.loads(survey_answers)
-                message["sondage"]=survey_answers
-            elif selected_option == "3":
-                message["isNumber"]=True
-            elif selected_option == "4":
-                message["isSiege"]=True
-            elif selected_option == "5":
-                message["isCreneau"]=True
-            elif selected_option == "6":
-                message["isGenre"]=True
-            elif selected_option == "7":
-                message["isType"]=True
-            elif selected_option == "8":
-                message["isQuantite"]=True
+        if selected_option != None and selected_option !=[]:
+            for type in selected_option:
+                if type == "nombre":
+                    message["isNumber"] = True
+                elif type =="date":
+                    message["isDate"] = True
+                elif type == "sondage" and survey_answers:
+                    survey_answers=json.loads(survey_answers)
+                    message["sondage"]=survey_answers
+                elif type == "siege":
+                    message["isSiege"]=True
+                elif type == "creneau":
+                    message["isCreneau"]=True
+                elif type == "genre":
+                    message["isGenre"]=True
+                elif type == "type_friandise":
+                    message["isType"]=True
+                elif type == "taille_friandise":
+                    message["isQuantite"]=True
+                elif type =="message" and not user_input:
+                    message={}
+
         return json.dumps(message)
     else:
         raise PreventUpdate
@@ -150,7 +153,7 @@ def display_survey_form(selected_option,client):
     :return: True et affiche si l'option "Sondage" est selectionnée, False sinon et cache
     """
     if client and selected_option != None:
-        if selected_option == "2":
+        if "sondage" in selected_option:
             return False
     return True
 
