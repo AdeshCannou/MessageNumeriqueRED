@@ -84,7 +84,7 @@ app.layout = dbc.Container(
         controls,
         dbc.InputGroup(
             [
-                dbc.Select(id="select",
+                dbc.Select(id="select", #si on veut selectionner plusieurs : mettre un dbc.Dropdown avec multi=True
                     options=[
                         {"label": " ", "value": 0},
                         {"label": "Date", "value": 1},

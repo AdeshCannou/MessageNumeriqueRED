@@ -58,37 +58,38 @@ def update_conversation(store_message,n_clicks, client, enter,chat_history):
 
     if ctx.args_grouping[1]["triggered"]==True and client or  ctx.args_grouping[3]["triggered"]==True and client:
         store_message=json.loads(store_message)
-        input_message = store_message["message"]
-        if len(store_message)==1:
+
+        if "message" in store_message:
+            input_message = store_message["message"]
             chat_history += f"{client}: {input_message}<split>"
-        else:
-            for key, value in store_message.items():
-                if key == "message":
-                    chat_history += f"{client}: {input_message}<split>"
-                if key =="sondage":
-                    sondage_message = f"{client}: Sondage"
-                    sondage_answers = store_message["sondage"]
-                    for answer in sondage_answers.values():
-                        sondage_message += f"{answer} \n"
-                    sondage_message = sondage_message[:-2]
-                    chat_history += f"{sondage_message}<split>"
 
-                elif key =="isNumber" :
-                    chat_history += f"{client}: Choisis un nombre<split>"
-                elif key =="isSiege":
-                    chat_history += f"{client}: Quel Siège<split>"
-                elif key =="isCreneau" and value==True:
-                    chat_history += f"{client}: Quel Créneau<split>"
-                elif key =="isDate" and value==True:
-                    chat_history += f"{client}: Quel Date<split>"
-                elif key =="isGenre" and value==True:
-                    chat_history += f"{client}: Quel Genre<split>"
-                elif key =="isType" and value==True:
-                    chat_history += f"{client}: Quel friandise<split>"
-                elif key =="isQuantite" and value==True:
-                    chat_history += f"{client}: Quel quantité Friandise<split>"
+        for key, value in store_message.items():
+            if key =="sondage":
+                sondage_message = f"{client}: Sondage"
+                sondage_answers = store_message["sondage"]
+                for answer in sondage_answers.values():
+                    sondage_message += f"{answer} \n"
+                sondage_message = sondage_message[:-2]
+                chat_history += f"{sondage_message}<split>"
+            elif key =="isNumber" :
+                chat_history += f"{client}: Choix d'un nombre<split>"
+            elif key =="isSiege":
+                chat_history += f"{client}: Choix d'un siège<split>"
+            elif key =="isCreneau" and value==True:
+                chat_history += f"{client}: Choix d'un créneau<split>"
+            elif key =="isDate" and value==True:
+                chat_history += f"{client}: Choix d'une date<split>"
+            elif key =="isGenre" and value==True:
+                chat_history += f"{client}: Choix d'un genre<split>"
+            elif key =="isType" and value==True:
+                chat_history += f"{client}: Choix d'une friandise<split>"
+            elif key =="isQuantite" and value==True:
+                chat_history += f"{client}: Choix de la quantité de la friandise<split>"
 
-    return chat_history
+    if len(chat_history)>1: # si jai au moins une option ou un message
+        return chat_history
+    else:
+        raise PreventUpdate
 
 @app.callback(
     Output("store-message", "data"),
@@ -108,9 +109,10 @@ def keep_message(n_clicks, client,selected_option ,survey_answers,enter,user_inp
     le message en json
     """
 
-    if user_input and ctx.args_grouping[0]["triggered"]==True and client or ctx.args_grouping[4]["triggered"]==True and client:
+    if  ctx.args_grouping[0]["triggered"]==True and client or ctx.args_grouping[4]["triggered"]==True and client:
         message = {}
-        message["message"] = user_input
+        if user_input:
+            message["message"] = user_input
         if selected_option != None or selected_option !="0":
             if selected_option == "1":
                 message["isDate"]=True
@@ -129,8 +131,7 @@ def keep_message(n_clicks, client,selected_option ,survey_answers,enter,user_inp
                 message["isType"]=True
             elif selected_option == "8":
                 message["isQuantite"]=True
-            return json.dumps(message)
-            #chat_history += f"{client}: {user_input}<split>"
+        return json.dumps(message)
     else:
         raise PreventUpdate
 
