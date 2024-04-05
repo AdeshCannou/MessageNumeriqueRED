@@ -17,7 +17,8 @@ def Header(name, app):
                 {"label": "Faire parler le client 2", "value": 2},
             ],
             id="client",
-            inline=True)
+            inline=True,
+            value=1,)
     return dbc.Row([dbc.Col(title, md=4), dbc.Col(clients, md=8)])
 
 def textbox(text, client):

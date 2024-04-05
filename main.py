@@ -9,6 +9,7 @@ import dash_bootstrap_components as dbc
 from dash.exceptions import PreventUpdate
 
 from layout import app, textbox
+from validate import validate_message
 
 #Ne pas oublier de creer une fonction qui peuple le select menu
 
@@ -59,6 +60,8 @@ def update_conversation(store_message,n_clicks, client, enter,chat_history):
     if ctx.args_grouping[1]["triggered"]==True and client or  ctx.args_grouping[3]["triggered"]==True and client:
         store_message=json.loads(store_message)
 
+        print(store_message)
+
         if "message" in store_message:
             input_message = store_message["message"]
             chat_history += f"{client}: {input_message}<split>"
@@ -108,6 +111,7 @@ def keep_message(n_clicks, client,selected_option ,survey_answers,enter,user_inp
     :return:
     le message en json
     """
+    
     if  ctx.args_grouping[0]["triggered"]==True and client or ctx.args_grouping[4]["triggered"]==True and client:
         message = {}
         if user_input:
