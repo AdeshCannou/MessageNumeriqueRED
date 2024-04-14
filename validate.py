@@ -59,29 +59,44 @@ def validate_message(message_json, user_input):
         except json.JSONDecodeError:
             return False
     elif message_json.get("isFilm"):
-        parts = [part.strip() for part in user_input.split(",")]
-        if len(parts) != 3:
-            return False
-        siege, creneau, genre = parts
+        parts = user_input.split()
+        pattern = r"^[A-Z]\d+$"
+        for part in parts:
+            if re.match(pattern, part):
+                # Si la partie respecte le format du siège, c'est le siège
+                siege = part
+            elif '/' in part:
+                # Si le mot contient '/', c'est potentiellement une date
+                try:
+                    datetime.datetime.strptime(part, "%d/%m/%Y")
+                    creneau = part
+                except ValueError:
+                    return False
+            elif part in [g.value for g in Genre]:
+                # Si le mot est un genre valide, c'est le genre
+                genre = part
         try:
-            int(siege)
-            datetime.datetime.strptime(creneau, "%d/%m/%Y")
-            if genre not in [g.value for g in Genre]:
-                return False
+            siege
+            creneau
+            genre
+            # print(f"Siege : {siege}, Creneau : {creneau}, Genre : {genre}")
             return True
-        except ValueError:
+        except NameError:
             return False
     elif message_json.get("isFriandise"):
-        parts = [part.strip() for part in user_input.split(",")]
-        if len(parts) != 2:
-            return False
-        type_friandise, quantite = parts
+        parts = user_input.split()
+        for part in parts:
+            if part.isdigit():
+                # Si le mot est un nombre, c'est la quantité
+                quantite = int(part)
+            elif part in [t.value for t in TypeFriandise]:
+                # Si le mot est un type de friandise valide, c'est le type de friandise
+                type_friandise = part
         try:
-            if type_friandise not in [t.value for t in TypeFriandise]:
-                return False
-            int(quantite)
+            quantite
+            type_friandise
             return True
-        except ValueError:
+        except NameError:
             return False
     else:
         return False
@@ -93,13 +108,13 @@ def validate_message(message_json, user_input):
 # is_valid = validate_message(message_json, user_input)
 # print(f"Le message est valide : {is_valid}")
 
-# message_json = {"isFilm": True}
-# user_input = "5,  25/12/2022,   Action"
-# is_valid = validate_message(message_json, user_input)
-# print(f"Le message de type 'film' est valide : {is_valid}")
+message_json = {"isFilm": True}
+user_input = "Je veux le 29/03/2024 pour le type Action siege F9"
+is_valid = validate_message(message_json, user_input)
+print(f"Le message de type 'film' est valide : {is_valid}")
 
 # message_json = {"isFriandise": True}
-# user_input = "Chocolat,  5"
+# user_input = "slkdj sdlkjsdljf 5 ksdj kjsqd kqsjhd kqjshd Chocolat"
 # is_valid = validate_message(message_json, user_input)
 # print(f"Le message de type 'friandise' est valide : {is_valid}")
 
