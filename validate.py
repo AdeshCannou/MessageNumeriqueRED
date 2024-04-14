@@ -108,10 +108,10 @@ def validate_message(message_json, user_input):
 # is_valid = validate_message(message_json, user_input)
 # print(f"Le message est valide : {is_valid}")
 
-message_json = {"isFilm": True}
-user_input = "Je veux le 29/03/2024 pour le type Action siege F9"
-is_valid = validate_message(message_json, user_input)
-print(f"Le message de type 'film' est valide : {is_valid}")
+# message_json = {"isFilm": True}
+# user_input = "Je veux le 29/03/2024 pour le type Action siege F9"
+# is_valid = validate_message(message_json, user_input)
+# print(f"Le message de type 'film' est valide : {is_valid}")
 
 # message_json = {"isFriandise": True}
 # user_input = "slkdj sdlkjsdljf 5 ksdj kjsqd kqsjhd kqjshd Chocolat"
