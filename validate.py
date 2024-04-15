@@ -16,105 +16,104 @@ class TypeFriandise(Enum):
     GATEAU = "Gateau"
     GLACE = "Glace"
 
-def validate_message(message_json, user_input):
-    """
-    Validate a message based on the specified type in the JSON and user input.
-    
-    Args:
-    - message_json (dict): Le JSON contenant les types de message à valider (par exemple : {"isFilm": true, "isFriandise": true}).
-    - user_input (str): L'entrée utilisateur à valider.
-    - survey_answers (str): Les réponses du sondage (utilisé uniquement si le type de message est "sondage").
+import re
+import datetime
+import json
 
-    Returns:
-    - bool: True si le message est valide selon le type spécifié dans le JSON, False sinon.
-    """
-    
-    if message_json.get("message"):
-        try:
-            if user_input:
-                return True
-            else:
-                return False
-        except ValueError:
-            return False
-    elif message_json.get("isNumber"):
-        number_pattern = r'\b\d+\b'
-        if re.search(number_pattern, user_input):
-            return True
-        else:
-            return False
-    elif message_json.get("isDate"):
-        date_pattern = r'\b\d{1,2}/\d{1,2}/\d{4}\b'
-        if re.search(date_pattern, user_input):
-            return True
-        else:
-            return False
-    elif "sondage" in message_json:
-        try:
-            sondage_data = message_json["sondage"]
-            if user_input in sondage_data.values():
-                return True
-            else:
-                return False
-        except json.JSONDecodeError:
-            return False
-    elif message_json.get("isFilm"):
-        parts = user_input.split()
-        pattern = r"^[A-Z]\d+$"
-        for part in parts:
-            if re.match(pattern, part):
-                # Si la partie respecte le format du siège, c'est le siège
-                siege = part
-            elif '/' in part:
-                # Si le mot contient '/', c'est potentiellement une date
-                try:
-                    datetime.datetime.strptime(part, "%d/%m/%Y")
-                    creneau = part
-                except ValueError:
+def validate_message(message_json, user_input):
+    for key, value in message_json.items():
+        if key == "message":
+            try:
+                if user_input:
+                    continue
+                else:
                     return False
-            elif part in [g.value for g in Genre]:
-                # Si le mot est un genre valide, c'est le genre
-                genre = part
-        try:
-            siege
-            creneau
-            genre
-            # print(f"Siege : {siege}, Creneau : {creneau}, Genre : {genre}")
-            return True
-        except NameError:
+            except ValueError:
+                return False
+        elif key == "isNumber" or key == "isQuantite":
+            number_pattern = r'\b\d+\b'
+            if not re.search(number_pattern, user_input):
+                return False
+        elif key == "isDate" or key == "isCreneau":
+            date_pattern = r'\b\d{1,2}/\d{1,2}/\d{4}\b'
+            if not re.search(date_pattern, user_input):
+                return False
+        elif key == "sondage":
+            try:
+                sondage_data = message_json["sondage"]
+                if user_input not in sondage_data.values():
+                    return False
+            except json.JSONDecodeError:
+                return False
+        elif key == "isSiege":
+            pattern = r"^[A-Z]\d+$"
+            parts = user_input.split()
+            found_siege = False
+            for part in parts:
+                if re.match(pattern, part):
+                    # Si la partie respecte le format du siège, on met found_siege à True et on continue la boucle
+                    found_siege = True
+                    break  # Sortir de la boucle une fois qu'un siège est trouvé
+            if not found_siege:
+                return False
+        elif key == "isGenre":
+            parts = user_input.split()
+            if not any(part.lower() in [genre.value.lower() for genre in Genre] for part in parts):
+                return False
+        elif key == "isType":
+            parts = user_input.split()
+            if not any(part.lower() in [type.value.lower() for type in TypeFriandise] for part in parts):
+                return False
+        else:
             return False
-    elif message_json.get("isFriandise"):
-        parts = user_input.split()
-        for part in parts:
-            if part.isdigit():
-                # Si le mot est un nombre, c'est la quantité
-                quantite = int(part)
-            elif part in [t.value for t in TypeFriandise]:
-                # Si le mot est un type de friandise valide, c'est le type de friandise
-                type_friandise = part
-        try:
-            quantite
-            type_friandise
-            return True
-        except NameError:
-            return False
-    else:
-        return False
+    return True
+
 
 # Exemples d'utilisation de la fonction
 
-# message_json = {'sondage': {'0': 'qds', '1': 'qszzd', '2': 'qsddd'}}
-# user_input = "qszzd"
-# is_valid = validate_message(message_json, user_input)
-# print(f"Le message est valide : {is_valid}")
+# Test pour isNumber
+# message_json = {"isNumber": True}
+# user_input = "ti 5d sdf 777 sdf  "
+# print(validate_message(message_json, user_input))  # True
 
-# message_json = {"isFilm": True}
-# user_input = "Je veux le 29/03/2024 pour le type Action siege F9"
-# is_valid = validate_message(message_json, user_input)
-# print(f"Le message de type 'film' est valide : {is_valid}")
+# Test pour isDate
+# message_json = {"isDate": True}
+# user_input = "papap 15/03/2024"
+# print(validate_message(message_json, user_input))  # True
 
-# message_json = {"isFriandise": True}
-# user_input = "slkdj sdlkjsdljf 5 ksdj kjsqd kqsjhd kqjshd Chocolat"
-# is_valid = validate_message(message_json, user_input)
-# print(f"Le message de type 'friandise' est valide : {is_valid}")
+# Test pour sondage
+# message_json = {"sondage": {"1": "Option 1", "2": "Option 2"}}
+# user_input = "Option 1"
+# print(validate_message(message_json, user_input))  # True
+
+# Test pour isCreneau
+# message_json = {"isCreneau": True}
+# user_input = " qsdf 15/03/2024"
+# print(validate_message(message_json, user_input))  # True
+
+# Test pour isSiege
+# message_json = {"isSiege": True}
+# user_input = "sdf A1sd sdd B22"
+# print(validate_message(message_json, user_input))  # True
+
+# Test pour isGenre
+# message_json = {"isGenre": True}
+# user_input = " sdfsf sdf sq Drama sd sds5 55qsd5"
+# print(validate_message(message_json, user_input))  # True
+
+# Test pour isType
+# message_json = {"isType": True}
+# user_input = "dsf  ds f  chocolat sdfd  sdf"
+# print(validate_message(message_json, user_input))  # True
+
+# Test pour isQuantite
+# message_json = {"isQuantite": True}
+# user_input = "5"
+# print(validate_message(message_json, user_input))  # True
+
+
+# Test avec plusieurs propriétés
+# message_json = {"isCreneau": True, "isGenre": True, "isSiege": True}
+# user_input = "genre : drama  creneau : 12/03/2022  siege : A56"
+# print(validate_message(message_json, user_input))  # True
 
