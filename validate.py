@@ -16,10 +16,6 @@ class TypeFriandise(Enum):
     GATEAU = "Gateau"
     GLACE = "Glace"
 
-import re
-import datetime
-import json
-
 def validate_message(message_json, user_input):
     for key, value in message_json.items():
         if key == "message":
