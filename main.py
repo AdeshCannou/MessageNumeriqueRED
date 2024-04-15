@@ -14,6 +14,49 @@ from validate import validate_message
 response_filter = {}
 clientId = 1
 
+
+@app.callback(
+    Output("offcanvas", "is_open"),
+    Input("open-offcanvas", "n_clicks"),
+    [State("offcanvas", "is_open")],
+)
+def toggle_offcanvas(n1, is_open):
+    if n1:
+        return not is_open
+    return is_open
+
+@app.callback(
+    Output("select", "options"),
+    Input("plugins", "value"),
+    State("select", "options")
+)
+def update_dropdown(plugins, current_options):
+    base_options = [{'label': 'Noyau', 'value': '', 'disabled': True},
+                    {'label': 'Message', 'value': 'message'},
+                    {'label': 'Date', 'value': 'date'},
+                    {'label': 'Sondage', 'value': 'sondage'},
+                    {'label': 'Nombre', 'value': 'nombre'}]
+
+    film_options = [{'label': 'Film', 'value': '', 'disabled': True},
+                    {'label': 'Siège', 'value': 'siege'},
+                    {'label': 'Créneau', 'value': 'creneau'},
+                    {'label': 'Genre', 'value': 'genre'}]
+
+    friandise_options = [{'label': 'Friandise', 'value': '', 'disabled': True},
+                         {'label': 'Type Friandise', 'value': 'type_friandise'},
+                         {'label': 'Taille Friandise', 'value': 'taille_friandise'}]
+
+    new_options = base_options.copy()
+
+    if "film" in plugins:
+        new_options += film_options
+    if "friandise" in plugins:
+        new_options += friandise_options
+
+    return new_options if new_options else base_options
+
+
+
 @app.callback(
     Output("display-conversation", "children"), [Input("store-conversation", "data")]
 )

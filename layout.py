@@ -13,8 +13,26 @@ def Header(name, app):
     clients = dbc.RadioItems(
             id="client",
             inline=True,
-            value=1,)
-    return dbc.Row([dbc.Col(title, md=6), dbc.Col(clients, md=3)])
+            value=1)
+
+    offcanvas = html.Div(
+        [
+            dbc.Button(
+                "Choix des plugins", id="open-offcanvas", n_clicks=0,color="light", className="me-1",style={"margin-top": "15px"}
+            ),
+            dbc.Offcanvas(
+                dcc.Checklist( id="plugins",options=[{'label': 'Noyau', 'value': 'noyau', 'disabled': True},
+                                                      {'label': 'Film', 'value': 'film'},
+                                                      {'label': 'Friandise', 'value': 'friandise'}], value=["noyau"]),
+                id="offcanvas",
+                title="Choix des plugins",
+                is_open=True,
+                placement="top",
+            ),
+        ]
+    )
+
+    return dbc.Row([dbc.Col(title, md=6),dbc.Col(offcanvas, md=2) ,dbc.Col(clients, md=3)])
 
 def textbox(text, client):
     
@@ -46,7 +64,7 @@ def textbox(text, client):
     return dbc.Card(f"{text}", style=style, body=True, color=color, inverse=True)
 
 # Define app
-app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.ZEPHYR])
 server = app.server
 
 # Define Layout
@@ -71,6 +89,7 @@ controls = dbc.InputGroup(
 app.layout = dbc.Container(
     fluid=False,
     children=[
+
         Header("Conversation", app),
         html.Hr(),
         dcc.Store(id="store-conversation", data=""),
@@ -84,13 +103,7 @@ app.layout = dbc.Container(
                         {'label': 'Date', 'value': 'date'},
                         {'label': 'Sondage', 'value': 'sondage'},
                         {'label': 'Nombre', 'value': 'nombre'},
-                        {'label': 'Film', 'value': '', 'disabled': True},
-                        {'label': 'Siège', 'value': 'siege'},
-                        {'label': 'Créneau', 'value': 'creneau'},
-                        {'label': 'Genre', 'value': 'genre'},
-                        {'label': 'Friandise', 'value': '', 'disabled': True},
-                        {'label': 'Type Friandise', 'value': 'type_friandise'},
-                        {'label': 'Taille Friandise', 'value': 'taille_friandise'}
+
                     ], placeholder="Selectionner option(s)",multi=True,id="select", value="message"
                 )
            ,html.Div(
