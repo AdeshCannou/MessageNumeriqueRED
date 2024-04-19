@@ -65,4 +65,4 @@ Film :
 
 Friandise :
 - `Type Friandise`: Type de friandise (Chocolat, Bonbon, Gâteau, Glace)
-- `Taille Friandise`: Quantité de Friandise - Nombre entier
+- `Taille Friandise`: Quantité de Friandise (M, L ou XL)
