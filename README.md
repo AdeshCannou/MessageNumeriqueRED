@@ -61,7 +61,7 @@ Noyau :
 Film :
 - `Siège`: Format de siège valide, Lettre Majuscule suivi d'un nombre (ex: A1, B2, etc.)
 - `Créneau`: Date au format "jj/mm/aaaa" (ex: 01/01/2022) 
-- `Genre`: Genre de film (Action, Drame, Comédie, Romance, Horror)
+- `Genre`: Genre de film (Action, Drame, Comedie, Romance, Horreur)
 
 Friandise :
 - `Type Friandise`: Type de friandise (Chocolat, Bonbon, Gâteau, Glace)

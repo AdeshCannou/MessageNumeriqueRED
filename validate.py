@@ -5,9 +5,9 @@ import re
 class Genre(Enum):
     ACTION = "Action"
     DRAMA = "Drama"
-    COMEDY = "Comedy"
+    COMEDY = "Comedie"
     ROMANCE = "Romance"
-    HORROR = "Horror"
+    HORROR = "Horreur"
 
 class TypeFriandise(Enum):
     CHOCOLAT = "Chocolat"
