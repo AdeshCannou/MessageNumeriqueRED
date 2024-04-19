@@ -1,6 +1,6 @@
 # Projet Représentation et échange de données : Communication numerique par messages structurés
 
-Ce projet vise à améliorer la communication numérique en proposant une approche structurée des messages. Il utilise Dash pour créer un client de messagerie interactif, permettant la gestion de messages structurés.
+Ce projet vise à améliorer la communication numérique en proposant une approche structurée des messages. Il utilise Dash, framework Python pour créer un client de messagerie interactif, permettant la gestion de messages structurés.
 
 ## Cloner le projet
 
@@ -33,7 +33,7 @@ Cela démarrera le serveur sur le port 8050 de votre machine locale. Vous pouvez
 ## Structure du projet
 
 - `main.py`: Code principal de l'application utilisant le framework Dash.
-- `layout.py`: Element de mise en page de l'application.
+- `layout.py`: Elements de mise en page de l'application.
 - `validate.py`: Fonctions de validation des messages.
 - `README.md`: Ce fichier README contenant des informations sur le projet.
 - `requirements.txt`: Fichier contenant les dépendances Python requises pour exécuter le projet.
