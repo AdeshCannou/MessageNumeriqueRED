@@ -57,9 +57,6 @@ def textbox(text, client):
     else:
         raise ValueError("Incorrect option for `client`.")
 
-    if "Sondage" in text:
-        survey = text.split("Sondage")[1].replace(" ", "/")
-        return dbc.Card(f"{survey}", style=style, body=True, color=color, inverse=True)
 
     return dbc.Card(f"{text}", style=style, body=True, color=color, inverse=True)
 
@@ -101,7 +98,7 @@ app.layout = dbc.Container(
                     [{'label': 'Noyau', 'value': '', 'disabled': True},
                         {'label': 'Message', 'value': 'message'},
                         {'label': 'Date', 'value': 'date'},
-                        {'label': 'Sondage', 'value': 'sondage'},
+                        {'label': 'Couleur', 'value': 'couleur'},
                         {'label': 'Nombre', 'value': 'nombre'},
 
                     ], placeholder="Selectionner option(s)",multi=True,id="select", value="message"
@@ -111,7 +108,6 @@ app.layout = dbc.Container(
                             dcc.Input(id="new-item-input"),
                             html.Button("Ajouter la réponse", id="add-btn"),
                             html.Div(id="list-container-div"),
-                            html.Button("Effacer le sondage", id="clear-done-btn"),
                             html.Div(id="totals-div"),
                             dcc.Store(id="keep-answers")
                         ],

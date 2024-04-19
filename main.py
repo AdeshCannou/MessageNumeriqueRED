@@ -13,6 +13,7 @@ from validate import validate_message
 
 response_filter = {}
 clientId = 1
+placeholder = "Client A..."
 
 
 @app.callback(
@@ -34,7 +35,7 @@ def update_dropdown(plugins, current_options):
     base_options = [{'label': 'Noyau', 'value': '', 'disabled': True},
                     {'label': 'Message', 'value': 'message'},
                     {'label': 'Date', 'value': 'date'},
-                    {'label': 'Sondage', 'value': 'sondage'},
+                    {'label': 'Couleur', 'value': 'couleur'},
                     {'label': 'Nombre', 'value': 'nombre'}]
 
     film_options = [{'label': 'Film', 'value': '', 'disabled': True},
@@ -95,9 +96,10 @@ def conversation_manager(store_message, n_clicks, client, enter, chat_history, i
         print(f'Former response filter: {response_filter}')
         print(f"Message received: {store_message}")
 
+
         if len(response_filter.keys()) > 0:
             print("Validation en cours")
-            if validate_message(response_filter, store_message["message"]):
+            if store_message["message"] != "" and validate_message(response_filter, store_message["message"]):
                 print("Message validé")
                 response_filter.clear()
             else:
@@ -109,20 +111,15 @@ def conversation_manager(store_message, n_clicks, client, enter, chat_history, i
 
         response_filter = store_message.copy()
         
-        if "message" in store_message:
-            response_filter.pop("message")
-            input_message = store_message["message"]
-
+        
+        response_filter.pop("message")
+        input_message = store_message["message"]
+        
         print(f"New response filter: {response_filter}")
         
         for key, value in store_message.items():
-            if key == "sondage":
-                sondage_message = f"{client}: Sondage"
-                sondage_answers = store_message["sondage"]
-                for answer in sondage_answers.values():
-                    sondage_message += f"{answer} \n"
-                sondage_message = sondage_message[:-2]
-                chat_history += f"{sondage_message}<split>"
+            if key == "isCouleur":
+                input_message += " [couleur]"
             elif key == "isNumber":
                 input_message += " [nombre]"
             elif key == "isSiege":
@@ -163,15 +160,16 @@ def send_message(n_clicks, client,selected_option ,survey_answers,enter,user_inp
         message = {}
         if user_input:
             message["message"] = user_input
+        else:
+            message["message"] = ""
         if selected_option != None and selected_option !=[]:
             for type in selected_option:
                 if type == "nombre":
                     message["isNumber"] = True
                 elif type =="date":
                     message["isDate"] = True
-                elif type == "sondage" and survey_answers:
-                    survey_answers=json.loads(survey_answers)
-                    message["sondage"]=survey_answers
+                elif type == "couleur":
+                    message["isCouleur"]=True
                 elif type == "siege":
                     message["isSiege"]=True
                 elif type == "creneau":
