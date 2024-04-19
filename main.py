@@ -109,10 +109,12 @@ def conversation_manager(store_message, n_clicks, client, enter, chat_history, i
                 return chat_history, alert_message, alert_is_open, placeholder
 
         response_filter = store_message.copy()
-        
-        
-        response_filter.pop("message")
-        input_message = store_message["message"]
+
+        if "message" in response_filter:
+            response_filter.pop("message")
+            input_message = store_message["message"]
+        else:
+            input_message = ""
         
         print(f"New response filter: {response_filter}")
         
