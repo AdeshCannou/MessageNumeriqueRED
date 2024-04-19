@@ -104,9 +104,8 @@ def conversation_manager(store_message, n_clicks, client, enter, chat_history, i
                 response_filter.clear()
             else:
                 print("Message invalide")
-                if not is_open:
-                    alert_message = "Réponse invalide. Veuillez répondre à la demande."
-                    alert_is_open = True
+                alert_message = "Réponse invalide. Veuillez répondre à la demande."
+                alert_is_open = True
                 return chat_history, alert_message, alert_is_open, placeholder
 
         response_filter = store_message.copy()
