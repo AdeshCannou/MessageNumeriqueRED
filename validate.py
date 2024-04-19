@@ -1,5 +1,4 @@
 from enum import Enum
-import datetime
 import json
 import re
 
@@ -15,9 +14,20 @@ class TypeFriandise(Enum):
     BONBON = "Bonbon"
     GATEAU = "Gateau"
     GLACE = "Glace"
+    
+class TypeCouleur(Enum):
+    ROUGE = "Rouge"
+    BLEU = "Bleu"
+    VERT = "Vert"
+    JAUNE = "Jaune"
+    ORANGE = "Orange"
+    VIOLET = "Violet"
+    BLANC = "Blanc"
+    NOIR = "Noir"
 
 def validate_message(message_json, user_input):
     for key, value in message_json.items():
+        print("Key: " + key)
         if key == "message":
             try:
                 if user_input:
@@ -27,19 +37,16 @@ def validate_message(message_json, user_input):
             except ValueError:
                 return False
         elif key == "isNumber" or key == "isQuantite":
-            number_pattern = r'\b\d+\b'
+            number_pattern = r'\s\d+\s*'
             if not re.search(number_pattern, user_input):
                 return False
         elif key == "isDate" or key == "isCreneau":
             date_pattern = r'\b\d{1,2}/\d{1,2}/\d{4}\b'
             if not re.search(date_pattern, user_input):
                 return False
-        elif key == "sondage":
-            try:
-                sondage_data = message_json["sondage"]
-                if user_input not in sondage_data.values():
-                    return False
-            except json.JSONDecodeError:
+        elif key == "isCouleur":
+            parts = user_input.split()
+            if not any(part.lower() in [couleur.value.lower() for couleur in TypeCouleur] for part in parts):
                 return False
         elif key == "isSiege":
             pattern = r"^[A-Z]\d+$"
@@ -47,9 +54,8 @@ def validate_message(message_json, user_input):
             found_siege = False
             for part in parts:
                 if re.match(pattern, part):
-                    # Si la partie respecte le format du siège, on met found_siege à True et on continue la boucle
                     found_siege = True
-                    break  # Sortir de la boucle une fois qu'un siège est trouvé
+                    break
             if not found_siege:
                 return False
         elif key == "isGenre":
@@ -60,8 +66,6 @@ def validate_message(message_json, user_input):
             parts = user_input.split()
             if not any(part.lower() in [type.value.lower() for type in TypeFriandise] for part in parts):
                 return False
-        else:
-            return False
     return True
 
 
