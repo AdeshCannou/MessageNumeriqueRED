@@ -99,11 +99,16 @@ def conversation_manager(store_message, n_clicks, client, enter, chat_history, i
 
         if len(response_filter.keys()) > 0:
             print("Validation en cours")
-            if store_message["message"] != "" and validate_message(response_filter, store_message["message"]):
-                print("Message validé")
-                response_filter.clear()
+            if "message" in store_message:
+                if store_message["message"] != "" and validate_message(response_filter, store_message["message"]):
+                    print("Message validé")
+                    response_filter.clear()
+                else:
+                    print("Message invalide")
+                    alert_message = "Réponse invalide. Veuillez répondre à la demande."
+                    alert_is_open = True
+                    return chat_history, alert_message, alert_is_open, placeholder
             else:
-                print("Message invalide")
                 alert_message = "Réponse invalide. Veuillez répondre à la demande."
                 alert_is_open = True
                 return chat_history, alert_message, alert_is_open, placeholder
