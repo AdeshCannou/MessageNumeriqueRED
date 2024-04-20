@@ -43,12 +43,12 @@ def validate_message(message_json, user_input):
             except ValueError:
                 return False
         elif key == "isNumber":
-            parts = user_input.split()
+            parts = re.split(r'\s|,', user_input)
             if not any(part.isdigit() for part in parts):
                 return False
         elif key == "isDate":
             date_pattern = r'\b(0?[1-9]|[12]\d|3[01])/(0?[1-9]|1[0-2])/((19|20)\d{2})\b' 
-            parts = user_input.split()
+            parts = re.split(r'\s|,', user_input)
             date_found = False
             for part in parts:
                 if re.match(date_pattern, part):
@@ -60,12 +60,12 @@ def validate_message(message_json, user_input):
             if not date_found:
                 return False
         elif key == "isCouleur":
-            parts = user_input.split()
+            parts = re.split(r'\s|,', user_input)
             if not any(part.lower() in [couleur.value.lower() for couleur in TypeCouleur] for part in parts):
                 return False
         elif key == "isSiege":
             pattern = r"^[A-Z]\d+$"
-            parts = user_input.split()
+            parts = re.split(r'\s|,', user_input)
             found_siege = False
             for part in parts:
                 if re.match(pattern, part):
@@ -74,19 +74,19 @@ def validate_message(message_json, user_input):
             if not found_siege:
                 return False
         elif key == "isGenre":
-            parts = user_input.split()
+            parts = re.split(r'\s|,', user_input)
             if not any(part.lower() in [genre.value.lower() for genre in Genre] for part in parts):
                 return False
         elif key == "isCreneau":
             time_pattern = r'^([01]?[0-9]|2[0-3]):[0-5][0-9]$'
-            if not any(re.match(time_pattern, part) for part in user_input.split()):
+            if not any(re.match(time_pattern, part) for part in re.split(r'\s|,', user_input)):
                 return False
         elif key == "isType":
-            parts = user_input.split()
+            parts = re.split(r'\s|,', user_input)
             if not any(part.lower() in [type.value.lower() for type in TypeFriandise] for part in parts):
                 return False
         elif key == "isQuantite":
-            parts = user_input.split()
+            parts = re.split(r'\s|,', user_input)
             taille_friandise_values = [str(taille.value) for taille in TypeTailleFriandise]
             if not any(part in taille_friandise_values for part in parts):
                 return False
