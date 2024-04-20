@@ -132,9 +132,9 @@ def conversation_manager(store_message, n_clicks, client, enter, chat_history, i
             elif key == "isGenre" and value == True:
                 input_message += " [genre]"
             elif key == "isType" and value == True:
-                input_message += " [Friandise]"
+                input_message += " [friandise]"
             elif key == "isQuantite" and value == True:
-                input_message += " [Quantité]"
+                input_message += " [taille]"
 
         chat_history += f"{clientId}: {input_message}<split>"
         
