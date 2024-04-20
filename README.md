@@ -60,7 +60,7 @@ Noyau :
 
 Film :
 - `Siège`: Format de siège valide, Lettre Majuscule suivi d'un nombre (ex: A1, B2, etc.)
-- `Créneau`: Date au format "HH:MM" (ex: 12:50) 
+- `Créneau`: Horaire au format "HH:MM" (ex: 12:50) 
 - `Genre`: Genre de film (Action, Drame, Comedie, Romance, Horreur)
 
 Friandise :
